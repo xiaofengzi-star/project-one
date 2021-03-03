@@ -36,6 +36,7 @@ public class BrandServiceImpl extends BaseServiceImpl<TbBrand> implements BrandS
         Example.Criteria criteria = example.createCriteria();
 
         if (!StringUtil.isEmpty(tbBrand.getFirstChar())){
+            PageHelper.startPage(1,rows);
             criteria.andEqualTo("firstChar",tbBrand.getFirstChar());
         }
         if (!StringUtil.isEmpty(tbBrand.getName())){

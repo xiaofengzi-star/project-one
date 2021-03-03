@@ -44,9 +44,6 @@
     <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-annotations:2.6.0" level="project" />
     <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-core:2.6.7" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Maven: org.slf4j:jcl-over-slf4j:1.7.21" level="project" />
-    <orderEntry type="library" name="Maven: com.pinyougou:pinyougou-content-interface:1.0-SNAPSHOT" level="project" />
-    <orderEntry type="library" name="Maven: com.pinyougou:pinyougou-order-interface:1.0-SNAPSHOT" level="project" />
-    <orderEntry type="library" name="Maven: com.pinyougou:pinyougou-seckill-interface:1.0-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Maven: org.springframework:spring-webmvc:4.3.10.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.springframework:spring-aop:4.3.10.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.springframework:spring-beans:4.3.10.RELEASE" level="project" />
