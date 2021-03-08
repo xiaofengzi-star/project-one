@@ -12,8 +12,7 @@ app.controller("baseController", function ($scope) {
     //加载表格数据
     $scope.reloadList = function () {
         //$scope.findPage($scope.paginationConf.currentPage,$scope.paginationConf.itemsPerPage);
-    $scope.search($scope.paginationConf.currentPage,
-    $scope.paginationConf.itemsPerPage);
+    $scope.search($scope.paginationConf.currentPage,$scope.paginationConf.itemsPerPage);
     };
 
     //定义一个放置选择了 id 的数组

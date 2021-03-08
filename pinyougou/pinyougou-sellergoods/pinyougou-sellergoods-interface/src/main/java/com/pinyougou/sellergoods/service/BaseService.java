@@ -43,5 +43,5 @@ public interface BaseService<T> {
      */
     public void deleteByIds(Serializable[] ids);
 
-    public PageResult search(TbBrand tbBrand, Integer page, Integer rows);
+    public PageResult search(T t, Integer page, Integer rows);
 }
