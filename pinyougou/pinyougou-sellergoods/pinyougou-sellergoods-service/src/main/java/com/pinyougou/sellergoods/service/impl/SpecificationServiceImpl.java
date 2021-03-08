@@ -4,8 +4,11 @@ import com.alibaba.dubbo.config.annotation.Service;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.pinyougou.mapper.SpecificationMapper;
+import com.pinyougou.mapper.SpecificationOptionMapper;
+import com.pinyougou.pojo.Specification;
 import com.pinyougou.pojo.TbBrand;
 import com.pinyougou.pojo.TbSpecification;
+import com.pinyougou.pojo.TbSpecificationOption;
 import com.pinyougou.sellergoods.service.SpecificationService;
 import com.pinyougou.sellergoods.service.impl.BaseServiceImpl;
 import com.pinyougou.vo.PageResult;
@@ -20,6 +23,9 @@ public class SpecificationServiceImpl extends BaseServiceImpl<TbSpecification> i
 
     @Autowired
     private SpecificationMapper specificationMapper;
+
+    @Autowired
+    private SpecificationOptionMapper specificationOptionMapper;
 
 
     /*
@@ -41,4 +47,11 @@ public class SpecificationServiceImpl extends BaseServiceImpl<TbSpecification> i
         return new PageResult(pageInfo.getTotal(), pageInfo.getList());
     }
 
+    @Override
+    public void save(Specification specification) {
+        specificationMapper.insert(specification.getTbSpecification());
+        for (TbSpecificationOption tbSpecificationOption : specification.getTbSpecificationOptions()) {
+            specificationOptionMapper.insert(tbSpecificationOption);
+        }
+    }
 }

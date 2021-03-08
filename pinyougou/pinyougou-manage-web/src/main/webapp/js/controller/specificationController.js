@@ -33,6 +33,7 @@ app.controller("specificationController",function ($scope, $controller,specifica
         })
     };
 
+    //初始化规格参数
     $scope.entity = {
         specificationOptionList:[],
         specification:{}
@@ -41,6 +42,22 @@ app.controller("specificationController",function ($scope, $controller,specifica
         specificationService.findOne(id).success(function (response) {
             $scope.entity.specificationOptionList = response.tbSpecificationOptions;
             $scope.entity.specification = response.tbSpecification;
+        })
+    };
+
+    //增加规格选项行
+    $scope.addTableRow = function(){
+        $scope.entity.specificationOptionList.push({});
+    };
+    //删除规格行
+    $scope.deleteTableRow = function(index){
+        $scope.entity.specificationOptionList.splice(index,1);
+    };
+
+    //新增修改规格
+    $scope.save = function () {
+        specificationService.save($scope.entity).success(function (response) {
+            alert("成功")
         })
     };
 });

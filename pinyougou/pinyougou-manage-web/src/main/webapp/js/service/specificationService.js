@@ -12,4 +12,8 @@ app.service("specificationService", function ($http) {
     this.findOne = function (id) {
         return $http.post("../specification/findOne.do?id="+id);
     };
+    //新增修改规格
+    this.save = function (entity) {
+        return $http.post("../specification/save.do",entity);
+    };
 });

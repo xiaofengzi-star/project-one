@@ -1,8 +1,9 @@
 package com.pinyougou.pojo;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class Specification {
+public class Specification implements Serializable {
     private TbSpecification tbSpecification;
     private List<TbSpecificationOption> tbSpecificationOptions;
 

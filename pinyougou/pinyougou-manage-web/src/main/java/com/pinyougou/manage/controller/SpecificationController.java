@@ -93,4 +93,14 @@ public class SpecificationController {
         return specification;
     }
 
+    @PostMapping("/save")
+    public Result save(@RequestBody Specification specification) {
+        try {
+            specificationService.save(specification);
+            return Result.ok("增加成功");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return Result.fail("增加失败");
+    }
 }
