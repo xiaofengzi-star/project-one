@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pinyougou.mapper.SpecificationOptionMapper">
+    <select id="selectBySpecId" parameterType="Long" resultType="TbSpecificationOption">
+      SELECT * FROM tb_specification_option where spec_id = #{id}
+    </select>
+
+</mapper>

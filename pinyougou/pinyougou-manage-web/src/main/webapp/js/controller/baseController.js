@@ -25,5 +25,15 @@ app.controller("baseController", function ($scope) {
         //删除位置，删除个数
         $scope.selectedIds.splice(index, 1);
     }
-};
+    };
+
+    //选择框
+    $scope.updateSelection = function ($event, id) {
+        if ($event.target.checked){
+            $scope.selectedIds.push(id);
+        }else {
+            var index = $scope.selectedIds.indexOf(id);
+            $scope.selectedIds.splice(index,1);
+        }
+    };
 });

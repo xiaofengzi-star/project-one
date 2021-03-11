@@ -4,22 +4,22 @@ import java.io.Serializable;
 import java.util.List;
 
 public class Specification implements Serializable {
-    private TbSpecification tbSpecification;
-    private List<TbSpecificationOption> tbSpecificationOptions;
+    private TbSpecification specification;
+    private List<TbSpecificationOption> specificationOptionList;
 
-    public TbSpecification getTbSpecification() {
-        return tbSpecification;
+    public TbSpecification getSpecification() {
+        return specification;
     }
 
-    public void setTbSpecification(TbSpecification tbSpecification) {
-        this.tbSpecification = tbSpecification;
+    public void setSpecification(TbSpecification specification) {
+        this.specification = specification;
     }
 
-    public List<TbSpecificationOption> getTbSpecificationOptions() {
-        return tbSpecificationOptions;
+    public List<TbSpecificationOption> getSpecificationOptionList() {
+        return specificationOptionList;
     }
 
-    public void setTbSpecificationOptions(List<TbSpecificationOption> tbSpecificationOptions) {
-        this.tbSpecificationOptions = tbSpecificationOptions;
+    public void setSpecificationOptionList(List<TbSpecificationOption> specificationOptionList) {
+        this.specificationOptionList = specificationOptionList;
     }
 }

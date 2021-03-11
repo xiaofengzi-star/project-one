@@ -16,4 +16,16 @@ app.service("specificationService", function ($http) {
     this.save = function (entity) {
         return $http.post("../specification/save.do",entity);
     };
+    //更新
+    this.update = function (entity) {
+        return $http.post("../specification/update.do",entity);
+    };
+    // 新增
+    this.add = function (entity) {
+        return $http.post("../specification/add.do", entity);
+    };
+    // 删除
+    this.delete = function (selectedIds) {
+        return $http.get("../specification/delete.do?ids="+selectedIds);
+    };
 });

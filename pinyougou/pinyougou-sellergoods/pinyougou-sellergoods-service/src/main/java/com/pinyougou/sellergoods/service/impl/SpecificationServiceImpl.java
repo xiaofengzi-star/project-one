@@ -48,10 +48,71 @@ public class SpecificationServiceImpl extends BaseServiceImpl<TbSpecification> i
     }
 
     @Override
-    public void save(Specification specification) {
-        specificationMapper.insert(specification.getTbSpecification());
-        for (TbSpecificationOption tbSpecificationOption : specification.getTbSpecificationOptions()) {
-            specificationOptionMapper.insert(tbSpecificationOption);
+    public void add(Specification specification) {
+        //新增规格
+        specificationMapper.insertSelective(specification.getSpecification());
+
+        insertSpecificationOption(specification);
+    }
+
+    /**
+     * 更新规格
+     * @param specification
+     */
+    @Override
+    public void update(Specification specification) {
+        //更新规格
+        specificationMapper.updateByPrimaryKeySelective(specification.getSpecification());
+
+        //更新规格选项,先删除后新增
+        TbSpecificationOption param = new TbSpecificationOption();
+        param.setSpecId(specification.getSpecification().getId());
+        specificationOptionMapper.delete(param);
+
+        insertSpecificationOption(specification);
+    }
+
+    @Override
+    public Specification findOneById(Long id) {
+        //获取规格
+        TbSpecification tbSpecification = specificationMapper.selectByPrimaryKey(id);
+        //获取规格选项
+        List<TbSpecificationOption> specificationOptionList = specificationOptionMapper.selectBySpecId(tbSpecification.getId());
+
+        Specification specification = new Specification();
+        specification.setSpecification(tbSpecification);
+        specification.setSpecificationOptionList(specificationOptionList);
+        return specification;
+    }
+
+    @Override
+    public void deleteSpecAndOps(Long[] ids) {
+        if (ids.length>0){
+            for (Long id : ids) {
+                //新增规格和规格选项  用来删除
+                TbSpecificationOption tbSpecificationOption = new TbSpecificationOption();
+                tbSpecificationOption.setSpecId(id);
+                TbSpecification tbSpecification = new TbSpecification();
+                tbSpecification.setId(id);
+                //删除
+                specificationOptionMapper.delete(tbSpecificationOption);
+                specificationMapper.delete(tbSpecification);
+            }
+        }
+    }
+
+    /**
+     * 插入规格选项
+     * @param specification
+     */
+    private void insertSpecificationOption(Specification specification){
+        //新增规格选项
+        if (specification.getSpecificationOptionList() != null && specification.getSpecificationOptionList().size() > 0){
+            for (TbSpecificationOption tbSpecificationOption : specification.getSpecificationOptionList()) {
+                //需要把spec_id绑定到规格id
+                tbSpecificationOption.setSpecId(specification.getSpecification().getId());
+                specificationOptionMapper.insertSelective(tbSpecificationOption);
+            }
         }
     }
 }

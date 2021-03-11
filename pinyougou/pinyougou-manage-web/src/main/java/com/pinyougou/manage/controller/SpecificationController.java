@@ -34,7 +34,7 @@ public class SpecificationController {
     }
 
     @PostMapping("/add")
-    public Result add(@RequestBody TbSpecification specification) {
+    public Result add(@RequestBody Specification specification) {
         try {
             specificationService.add(specification);
             return Result.ok("增加成功");
@@ -45,7 +45,7 @@ public class SpecificationController {
     }
 
     @PostMapping("/update")
-    public Result update(@RequestBody TbSpecification specification) {
+    public Result update(@RequestBody Specification specification) {
         try {
             specificationService.update(specification);
             return Result.ok("修改成功");
@@ -58,7 +58,7 @@ public class SpecificationController {
     @GetMapping("/delete")
     public Result delete(Long[] ids) {
         try {
-            specificationService.deleteByIds(ids);
+            specificationService.deleteSpecAndOps(ids);
             return Result.ok("删除成功");
         } catch (Exception e) {
             e.printStackTrace();
@@ -84,23 +84,7 @@ public class SpecificationController {
      * */
     @PostMapping("/findOne")
     public Specification findOne(Long id) {
-        TbSpecification tbSpecification = specificationService.findOne(id);
-        List<TbSpecificationOption> specificationOptionList = specificationOptionService.findBySpecId(tbSpecification.getId());
-
-        Specification specification = new Specification();
-        specification.setTbSpecification(tbSpecification);
-        specification.setTbSpecificationOptions(specificationOptionList);
-        return specification;
+       return specificationService.findOneById(id);
     }
 
-    @PostMapping("/save")
-    public Result save(@RequestBody Specification specification) {
-        try {
-            specificationService.save(specification);
-            return Result.ok("增加成功");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return Result.fail("增加失败");
-    }
 }
