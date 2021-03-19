@@ -2,6 +2,7 @@ package com.pinyougou.manage.controller;
 
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.pinyougou.pojo.Specification;
+import com.pinyougou.pojo.TbBrand;
 import com.pinyougou.pojo.TbSpecification;
 import com.pinyougou.pojo.TbSpecificationOption;
 import com.pinyougou.sellergoods.service.SpecificationOptionService;
@@ -11,6 +12,7 @@ import com.pinyougou.vo.Result;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RequestMapping("/specification")
 @RestController
@@ -87,4 +89,9 @@ public class SpecificationController {
        return specificationService.findOneById(id);
     }
 
+
+    @GetMapping("/selectSpecList")
+    public List<Map<String, TbSpecification>> selectBrandList(){
+        return specificationService.selectSpecificationList();
+    }
 }

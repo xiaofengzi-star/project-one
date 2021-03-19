@@ -8,6 +8,7 @@ import com.pinyougou.vo.Result;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RequestMapping("/brand")
 @RestController
@@ -77,5 +78,10 @@ public class BrandController {
     @PostMapping("/search")
     public PageResult search(@RequestBody TbBrand tbBrand, Integer page, Integer rows){
           return brandService.search(tbBrand,page,rows);
+    }
+
+    @GetMapping("/selectBrandList")
+    public List<Map<String,TbBrand>> selectBrandList(){
+        return brandService.selectBrandList();
     }
 }
