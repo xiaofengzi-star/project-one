@@ -6,6 +6,8 @@ import com.pinyougou.sellergoods.service.BaseService;
 import com.pinyougou.vo.PageResult;
 
 import java.io.Serializable;
+import java.util.List;
+import java.util.Map;
 
 public interface SpecificationService extends BaseService<TbSpecification> {
 
@@ -18,4 +20,6 @@ public interface SpecificationService extends BaseService<TbSpecification> {
     Specification findOneById(Long id);
 
     void deleteSpecAndOps(Long[] ids);
+
+    List<Map<String, TbSpecification>> selectSpecificationList();
 }

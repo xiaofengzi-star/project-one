@@ -17,6 +17,7 @@ import org.springframework.util.StringUtils;
 import tk.mybatis.mapper.entity.Example;
 
 import java.util.List;
+import java.util.Map;
 
 @Service(interfaceClass = SpecificationService.class)
 public class SpecificationServiceImpl extends BaseServiceImpl<TbSpecification> implements SpecificationService {
@@ -114,5 +115,10 @@ public class SpecificationServiceImpl extends BaseServiceImpl<TbSpecification> i
                 specificationOptionMapper.insertSelective(tbSpecificationOption);
             }
         }
+    }
+
+    @Override
+    public List<Map<String, TbSpecification>> selectSpecificationList() {
+        return specificationMapper.selectSpecificationList();
     }
 }

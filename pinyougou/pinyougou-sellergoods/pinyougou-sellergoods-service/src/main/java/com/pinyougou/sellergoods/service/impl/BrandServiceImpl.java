@@ -12,6 +12,7 @@ import tk.mybatis.mapper.entity.Example;
 import tk.mybatis.mapper.util.StringUtil;
 
 import java.util.List;
+import java.util.Map;
 
 @Service(interfaceClass = BrandService.class)
 public class BrandServiceImpl extends BaseServiceImpl<TbBrand> implements BrandService {
@@ -29,6 +30,12 @@ public class BrandServiceImpl extends BaseServiceImpl<TbBrand> implements BrandS
         PageHelper.startPage(page,rows);
         return brandMapper.selectAll();
     }
+
+    @Override
+    public List<Map<String, TbBrand>> selectBrandList() {
+        return brandMapper.selectBrandList();
+    }
+
     @Override
     public PageResult search(TbBrand tbBrand, Integer page, Integer rows){
         PageHelper.startPage(page,rows);
