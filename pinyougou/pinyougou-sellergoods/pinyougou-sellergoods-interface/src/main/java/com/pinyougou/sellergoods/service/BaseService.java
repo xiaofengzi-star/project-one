@@ -1,8 +1,6 @@
 package com.pinyougou.sellergoods.service;
 
-import com.pinyougou.pojo.TbBrand;
 import com.pinyougou.vo.PageResult;
-
 import java.io.Serializable;
 import java.util.List;
 

@@ -28,8 +28,6 @@ public class BrandController {
     //@RequestMapping(value = "/findAll", method =  RequestMethod.GET)
     //@ResponseBody
     public List<TbBrand> findAll(){
-        System.out.println("来了吗");
-        //return brandService.queryAll();
         return brandService.queryAll();
     }
 
