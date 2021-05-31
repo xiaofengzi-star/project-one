@@ -51,4 +51,9 @@ public class SellerServiceImpl extends BaseServiceImpl<TbSeller> implements Sell
         tbSeller.setStatus(status);
         sellerMapper.updateByPrimaryKey(tbSeller);
     }
+
+    @Override
+    public TbSeller findOne(String username) {
+        return sellerMapper.selectByPrimaryKey(username);
+    }
 }

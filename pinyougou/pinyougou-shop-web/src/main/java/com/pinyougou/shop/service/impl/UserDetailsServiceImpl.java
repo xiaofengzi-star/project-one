@@ -27,6 +27,7 @@ public class UserDetailsServiceImpl  implements UserDetailsService {
 
         //数据库寻找用户名
         TbSeller one = sellerService.findOne(username);
+
         //通过审核的才给登陆
         if (one!=null && "1".equals(one.getStatus())){
             return new User(username, one.getPassword(), authorities);

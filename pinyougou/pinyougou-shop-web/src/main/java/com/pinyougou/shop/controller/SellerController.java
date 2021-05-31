@@ -6,6 +6,7 @@ import com.pinyougou.sellergoods.service.SellerService;
 import com.pinyougou.vo.PageResult;
 import com.pinyougou.vo.Result;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -39,6 +40,9 @@ public class SellerController {
     @PostMapping("/add")
     public Result add(@RequestBody TbSeller seller) {
         try {
+            //使用BCryptPasswordEncoder加密
+            BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+            seller.setPassword(bCryptPasswordEncoder.encode(seller.getPassword()));
             sellerService.add(seller);
             return Result.ok("增加成功");
         } catch (Exception e) {
@@ -74,15 +78,6 @@ public class SellerController {
         return Result.fail("删除失败");
     }
 
-    @GetMapping("/test")
-    public void test() {
-        //允许详情系统的资源请求
-        response.setHeader("Access-Control-Allow-Origin ", "http://manage.pinyougou.com");
-
-        //允许接收详情系统前端携带的cookie
-        response.setHeader("Access-Control-Allow-Credentials", "true");
-        System.out.println("lailema");
-    }
     /**
      * 分页查询列表
      * @param seller 查询条件
@@ -93,13 +88,6 @@ public class SellerController {
     @PostMapping("/search")
     public PageResult search(@RequestBody  TbSeller seller, @RequestParam(value = "page", defaultValue = "1")Integer page,
                                @RequestParam(value = "rows", defaultValue = "10")Integer rows) {
-        //允许详情系统的资源请求
-        response.setHeader("Access-Control-Allow-Origin ", "http://manage.pinyougou.com");
-
-        //允许接收详情系统前端携带的cookie
-        response.setHeader("Access-Control-Allow-Credentials", "true");
-
-        System.out.println("==================102==============");
         return sellerService.search(seller, page, rows);
     }
 
