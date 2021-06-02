@@ -1,5 +1,5 @@
 //定义业务服务
-app.service("typeTemplateService",function ($http) {
+app.service("typeTemplateServiceFromShop",function ($http) {
     //加载列表数据
     this.findAll = function(){
         return $http.get("../typeTemplate/findAll.do");
@@ -28,6 +28,11 @@ app.service("typeTemplateService",function ($http) {
     this.search = function (page, rows, searchEntity) {
         return $http.post("../typeTemplate/search.do?page=" + page + "&rows=" + rows, searchEntity);
 
+    };
+
+    // 品牌多选列表
+    this.findBrandList = function () {
+        return $http.get("../brand/findBrandList.do?random="+Math.random());
     };
 
     this.findSpecList = function (id) {

@@ -11,4 +11,6 @@ public interface BrandService extends BaseService<TbBrand> {
     public List<TbBrand> testPage(int page, int rows);
 
     List<Map<String, TbBrand>> selectBrandList();
+
+    List<TbBrand> findBrandList();
 }

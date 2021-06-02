@@ -54,4 +54,9 @@ public class BrandServiceImpl extends BaseServiceImpl<TbBrand> implements BrandS
         PageInfo<TbBrand> pageInfo = new PageInfo<>(list);
         return new PageResult(pageInfo.getTotal(),pageInfo.getList());
     }
+
+    @Override
+    public List<TbBrand> findBrandList() {
+        return brandMapper.selectAll();
+    }
 }
