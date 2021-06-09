@@ -1,5 +1,5 @@
 //定义业务服务
-app.service("typeTemplateServiceFromShop",function ($http) {
+app.service("typeTemplateService",function ($http) {
     //加载列表数据
     this.findAll = function(){
         return $http.get("../typeTemplate/findAll.do");

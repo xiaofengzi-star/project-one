@@ -24,6 +24,7 @@
     <http pattern="/js/**" security="none"/>
     <http pattern="/plugins/**" security="none"/>
     <http pattern="/seller/add.do" security="none"/>
+    <http pattern="/upload.do" security="none"/>
     <http use-expressions="false">
         <!--拥有 USER 角色的可以任意访问-->
         <intercept-url pattern="/**" access="ROLE_SELLER"/>

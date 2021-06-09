@@ -28,11 +28,10 @@
     <script src="../js/base.js"></script>
     <script src="../js/service/goodsService.js"></script>
     <script src="../js/service/uploadService.js"></script>
-    <script src="../js/service/itemCatServiceFromShop.js"></script>
-    <script src="../js/service/typeTemplateServiceFromShop.js"></script>
+    <script src="../js/service/itemCatService.js"></script>
+    <script src="../js/service/typeTemplateService.js"></script>
     <script src="../js/controller/baseController.js"></script>
     <script src="../js/controller/goodsController.js"></script>
-	<script src="../js/controller/itemCatControllerFromShop.js"></script>
 
 	<script src="../plugins/select2/angular-select2.js"></script>
 
@@ -238,7 +237,7 @@
 										            	<input class="form-control" ng-model="item.num" placeholder="库存数量">
 										            </td>
 										            <td>
-										             	<input disabled ng-model="item.status" ng-true-value="1" ng-false-value="0" type="checkbox" >
+										             	<input  ng-model="item.status" ng-true-value="1" ng-false-value="0" type="checkbox" >
 										            </td>
 										            <td>
 										                <input ng-model="item.isDefault" ng-true-value="1" ng-false-value="0" type="checkbox" >
@@ -345,7 +344,7 @@
 	</div>
 </div>
 
-            
+
             <!-- 正文区域 /-->
 <script type="text/javascript">
 

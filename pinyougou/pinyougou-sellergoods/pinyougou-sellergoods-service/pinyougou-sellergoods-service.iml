@@ -76,5 +76,6 @@
     <orderEntry type="library" name="Maven: com.github.sgroschupf:zkclient:0.1" level="project" />
     <orderEntry type="library" name="Maven: com.alibaba:fastjson:1.2.44" level="project" />
     <orderEntry type="module" module-name="pinyougou-common" />
+    <orderEntry type="library" name="Maven: cn.bestwu:fastdfs-client-java:1.27" level="project" />
   </component>
 </module>
