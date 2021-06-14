@@ -7,7 +7,7 @@ import com.pinyougou.vo.Result;
 
 public interface GoodsService extends BaseService<TbGoods> {
 
-    Goods findOne(Long id);
+    Goods findOneByGoodId(Long id);
 
     void add(Goods goods);
 
