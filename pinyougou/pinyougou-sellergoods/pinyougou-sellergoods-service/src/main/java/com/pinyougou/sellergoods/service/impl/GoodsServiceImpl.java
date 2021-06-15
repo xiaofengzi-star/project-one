@@ -1,6 +1,7 @@
 package com.pinyougou.sellergoods.service.impl;
 
 import com.alibaba.dubbo.config.annotation.Service;
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -14,10 +15,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import tk.mybatis.mapper.entity.Example;
 
+import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @Service(interfaceClass = GoodsService.class)
 public class GoodsServiceImpl extends BaseServiceImpl<TbGoods> implements GoodsService {
@@ -112,23 +115,43 @@ public class GoodsServiceImpl extends BaseServiceImpl<TbGoods> implements GoodsS
      * @param goods goods
      */
     private void addItem(Goods goods){
+        TbItem tbItem = new TbItem();
+        //未审核
+        tbItem.setStatus("0");
+        tbItem.setSellerId(goods.getGoods().getSellerId());
+        tbItem.setGoodsId(goods.getGoods().getId());
+        tbItem.setCreateTime(new Date());
+        //是否启用规格
         if ("1".equals(goods.getGoods().getIsEnableSpec())){
+            for (TbItem item : goods.getItemList()) {
+                tbItem.setPrice(item.getPrice());
+                tbItem.setNum(item.getNum());
+                tbItem.setIsDefault(item.getIsDefault());
+
+                //拿到规格列表
+                Map maps = JSON.parseObject(item.getSpec(), Map.class);
+                String title = goods.getGoods().getGoodsName();
+                Collection values = maps.values();
+                for (Object value : values) {
+                    title += value + " ";
+                }
+
+                tbItem.setTitle(title);
+                setItemValue(tbItem,goods);
+
+            }
 
         }else {
-            TbItem tbItem = new TbItem();
             //商品标题
             tbItem.setTitle(goods.getGoods().getGoodsName());
-            //未审核
-            tbItem.setStatus("0");
+
             tbItem.setNum(9999);
             tbItem.setIsDefault("1");
             tbItem.setSpec("{}");
-            tbItem.setSellerId(goods.getGoods().getSellerId());
-            tbItem.setGoodsId(goods.getGoods().getId());
-            tbItem.setCreateTime(new Date());
+
             setItemValue(tbItem,goods);
-            itemMapper.insert(tbItem);
         }
+        itemMapper.insert(tbItem);
     }
 
     /**
