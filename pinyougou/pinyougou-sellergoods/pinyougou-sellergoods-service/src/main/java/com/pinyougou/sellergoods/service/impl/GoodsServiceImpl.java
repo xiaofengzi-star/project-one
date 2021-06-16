@@ -57,9 +57,9 @@ public class GoodsServiceImpl extends BaseServiceImpl<TbGoods> implements GoodsS
         if(!StringUtils.isEmpty(goods.getAuditStatus())){
             criteria.andEqualTo("auditStatus",goods.getAuditStatus());
         }
-        //搜索条件  s商品名称
+        //搜索条件  商品名称
         if(!StringUtils.isEmpty(goods.getGoodsName())){
-            criteria.andLike("goodsName","%"+goods.getAuditStatus()+"%");
+            criteria.andLike("goodsName","%"+goods.getGoodsName()+"%");
         }
         List<TbGoods> list = goodsMapper.selectByExample(example);
         PageInfo<TbGoods> pageInfo = new PageInfo<>(list);
@@ -98,60 +98,70 @@ public class GoodsServiceImpl extends BaseServiceImpl<TbGoods> implements GoodsS
         goodsDescMapper.insert(goods.getGoodsDesc());
 
         //新增sku
-        addItem(goods);
+        saveItemList(goods);
     }
 
     @Override
     public void update(Goods goods) {
         goodsMapper.updateByPrimaryKeySelective(goods.getGoods());
         goodsDescMapper.updateByPrimaryKeySelective(goods.getGoodsDesc());
-        for (TbItem tbItem : goods.getItemList()) {
-            itemMapper.updateByPrimaryKeySelective(tbItem);
-        }
+
+        //先删掉再更新
+        TbItem param = new TbItem();
+        param.setGoodsId(goods.getGoods().getId());
+        itemMapper.delete(param);
+        saveItemList(goods);
     }
 
+
     /**
-     * 新增sku
+     * 保存sku动态数据
      * @param goods goods
      */
-    private void addItem(Goods goods){
-        TbItem tbItem = new TbItem();
-        //未审核
-        tbItem.setStatus("0");
-        tbItem.setSellerId(goods.getGoods().getSellerId());
-        tbItem.setGoodsId(goods.getGoods().getId());
-        tbItem.setCreateTime(new Date());
+    private void saveItemList(Goods goods){
+
         //是否启用规格
         if ("1".equals(goods.getGoods().getIsEnableSpec())){
             for (TbItem item : goods.getItemList()) {
+                TbItem tbItem = new TbItem();
+                setSameValue(tbItem,goods);
+
                 tbItem.setPrice(item.getPrice());
                 tbItem.setNum(item.getNum());
                 tbItem.setIsDefault(item.getIsDefault());
+                tbItem.setSpec(item.getSpec());
 
                 //拿到规格列表
                 Map maps = JSON.parseObject(item.getSpec(), Map.class);
+                //title = 商品名称+规格
                 String title = goods.getGoods().getGoodsName();
-                Collection values = maps.values();
-                for (Object value : values) {
-                    title += value + " ";
+                for (Object value : maps.values()) {
+                    title += " " + value  ;
                 }
-
                 tbItem.setTitle(title);
-                setItemValue(tbItem,goods);
 
+                //设置新增sku的其他参数
+                setItemValue(tbItem,goods);
+                itemMapper.insert(tbItem);
             }
 
         }else {
+            TbItem tbItem = new TbItem();
+            setSameValue(tbItem,goods);
+
             //商品标题
             tbItem.setTitle(goods.getGoods().getGoodsName());
 
             tbItem.setNum(9999);
             tbItem.setIsDefault("1");
             tbItem.setSpec("{}");
-
+            tbItem.setPrice(goods.getGoods().getPrice());
+            //设置新增sku的其他参数
             setItemValue(tbItem,goods);
+
+            itemMapper.insert(tbItem);
         }
-        itemMapper.insert(tbItem);
+
     }
 
     /**
@@ -160,7 +170,6 @@ public class GoodsServiceImpl extends BaseServiceImpl<TbGoods> implements GoodsS
      * @param goods goods
      */
     private void setItemValue(TbItem tbItem, Goods goods) {
-            tbItem.setPrice(goods.getGoods().getPrice());
 
             //image  url
             if (!StringUtils.isEmpty(goods.getGoodsDesc().getItemImages())){
@@ -187,5 +196,25 @@ public class GoodsServiceImpl extends BaseServiceImpl<TbGoods> implements GoodsS
             TbSeller tbSeller = new TbSeller();
             tbSeller.setSellerId(tbItem.getSellerId());
             tbItem.setSeller(sellerMapper.selectByPrimaryKey(tbSeller).getName());
+    }
+
+    /**
+     * 设置新增sku的其他参数
+     * @param tbItem update参数
+     * @param goods goods
+     */
+    private void setSameValue(TbItem tbItem,Goods goods){
+        //未审核
+        tbItem.setStatus("0");
+        tbItem.setSellerId(goods.getGoods().getSellerId());
+        tbItem.setGoodsId(goods.getGoods().getId());
+        tbItem.setCreateTime(new Date());
+    }
+
+    @Override
+    public void updateStatus(Long[] ids, String status) {
+        for (Long id : ids) {
+            TbGoods tbGoods = new TbGoods();
+        }
     }
 }
