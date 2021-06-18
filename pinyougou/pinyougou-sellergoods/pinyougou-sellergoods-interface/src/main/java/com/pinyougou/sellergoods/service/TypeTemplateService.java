@@ -1,8 +1,7 @@
 package com.pinyougou.sellergoods.service;
 
 import com.pinyougou.pojo.TbTypeTemplate;
-import com.pinyougou.sellergoods.service.BaseService;
-import com.pinyougou.vo.PageResult;
+import com.pinyougou.service.BaseService;
 
 import java.util.List;
 import java.util.Map;

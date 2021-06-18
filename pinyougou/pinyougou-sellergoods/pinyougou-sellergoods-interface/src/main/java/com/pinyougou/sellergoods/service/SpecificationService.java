@@ -2,10 +2,8 @@ package com.pinyougou.sellergoods.service;
 
 import com.pinyougou.pojo.Specification;
 import com.pinyougou.pojo.TbSpecification;
-import com.pinyougou.sellergoods.service.BaseService;
-import com.pinyougou.vo.PageResult;
+import com.pinyougou.service.BaseService;
 
-import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 

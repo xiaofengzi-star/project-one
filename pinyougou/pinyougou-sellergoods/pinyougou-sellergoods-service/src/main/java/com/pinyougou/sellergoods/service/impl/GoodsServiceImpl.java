@@ -8,20 +8,19 @@ import com.github.pagehelper.PageInfo;
 import com.pinyougou.mapper.*;
 import com.pinyougou.pojo.*;
 import com.pinyougou.sellergoods.service.GoodsService;
+import com.pinyougou.service.impl.BaseServiceImpl;
 import com.pinyougou.vo.Goods;
 import com.pinyougou.vo.PageResult;
-import com.pinyougou.vo.Result;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import tk.mybatis.mapper.entity.Example;
 
-import java.util.Collection;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
+@Transactional
 @Service(interfaceClass = GoodsService.class)
 public class GoodsServiceImpl extends BaseServiceImpl<TbGoods> implements GoodsService {
 
@@ -49,6 +48,10 @@ public class GoodsServiceImpl extends BaseServiceImpl<TbGoods> implements GoodsS
 
         Example example = new Example(TbGoods.class);
         Example.Criteria criteria = example.createCriteria();
+
+        //不查找已经删除的商品
+        criteria.andNotEqualTo("isDelete","1");
+
         //根据sellerId获取商品
         if(!StringUtils.isEmpty(goods.getSellerId())){
             criteria.andEqualTo("sellerId", goods.getSellerId());
@@ -94,7 +97,6 @@ public class GoodsServiceImpl extends BaseServiceImpl<TbGoods> implements GoodsS
 
         //1、保存基本信息；在mybatis中如果在保存成功后主键可以回填到保存时候的那个对象中
         goods.getGoodsDesc().setGoodsId(goods.getGoods().getId());
-
         goodsDescMapper.insert(goods.getGoodsDesc());
 
         //新增sku
@@ -103,6 +105,8 @@ public class GoodsServiceImpl extends BaseServiceImpl<TbGoods> implements GoodsS
 
     @Override
     public void update(Goods goods) {
+        //更新之后状态为未审核
+        goods.getGoods().setAuditStatus("0");
         goodsMapper.updateByPrimaryKeySelective(goods.getGoods());
         goodsDescMapper.updateByPrimaryKeySelective(goods.getGoodsDesc());
 
@@ -211,10 +215,32 @@ public class GoodsServiceImpl extends BaseServiceImpl<TbGoods> implements GoodsS
         tbItem.setCreateTime(new Date());
     }
 
+    /**
+     * 根据选中的id跟状态更新goods
+     * @param ids 选中的商品id
+     * @param status 更新后的状态
+     */
     @Override
     public void updateStatus(Long[] ids, String status) {
         for (Long id : ids) {
             TbGoods tbGoods = new TbGoods();
+            tbGoods.setId(id);
+            tbGoods.setAuditStatus(status);
+            goodsMapper.updateByPrimaryKeySelective(tbGoods);
+        }
+    }
+
+    /**
+     * 根据选中的id 删除 goods
+     * @param ids 选中的商品id
+     */
+    @Override
+    public void deleteGoodsByIds(Long[] ids) {
+        for (Long id : ids) {
+            TbGoods param = new TbGoods();
+            param.setId(id);
+            param.setIsDelete("1");
+            goodsMapper.updateByPrimaryKeySelective(param);
         }
     }
 }
