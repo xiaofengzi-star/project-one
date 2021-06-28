@@ -16,7 +16,7 @@
         <script src="js/controller/searchController.js"></script>
     </head>
 
-    <body ng-app="pinyougou" ng-controller="searchController" ng-init="">
+    <body ng-app="pinyougou" ng-controller="searchController" ng-init="loadKeywords()">
 		<!-- 头部栏位 -->
 		<!--页面顶部-->
 		<div id="nav-bottom">
@@ -26,21 +26,21 @@
 					<div class="py-container">
 						<div class="shortcut">
 							<ul class="fl">
-								<li class="f-item">品优购欢迎您！</li>
+								<li class="f-item">PYG欢迎您！</li>
 						<li class="f-item">请<a href="http://cas.pinyougou.com?service=http://www.pinyougou.com">登录</a>　<span><a href="http://user.pinyougou.com/register.html" target="_blank">免费注册</a></span></li>
 							</ul>
 							<ul class="fr">
 								<li class="f-item">我的订单</li>
 								<li class="f-item space"></li>
 								<li class="f-item">
-									<a href="home.html" target="_blank">我的品优购</a>
+									<a href="home.html" target="_blank">我的PYG</a>
 								</li>
 								<li class="f-item space"></li>
-								<li class="f-item">品优购会员</li>
+								<li class="f-item">PYG会员</li>
 								<li class="f-item space"></li>
 								<li class="f-item">企业采购</li>
 								<li class="f-item space"></li>
-								<li class="f-item">关注品优购</li>
+								<li class="f-item">关注PYG</li>
 								<li class="f-item space"></li>
 								<li class="f-item" id="service">
 									<span>客户服务</span>
@@ -71,21 +71,21 @@
 					<div class="py-container">
 						<div class="yui3-g Logo">
 							<div class="yui3-u Left logoArea">
-								<a class="logo-bd" title="品优购" href="http://www.pinyougou.com" target="_blank"></a>
+								<a class="logo-bd" title="PYG" href="http://www.pinyougou.com" target="_blank"></a>
 							</div>
 							<div class="yui3-u Center searchArea">
 								<div class="search">
 									<form action="" class="sui-form form-inline">
 										<!--searchAutoComplete-->
 										<div class="input-append">
-											<input type="text" id="autocomplete" type="text" class="input-error input-xxlarge" />
-											<button class="sui-btn btn-xlarge btn-danger" type="button">搜索</button>
+											<input type="text" id="autocomplete" ng-model="searchMap.keywords" type="text" class="input-error input-xxlarge" />
+											<button class="sui-btn btn-xlarge btn-danger" ng-click="searchMap.pageNo=1;search()" type="button">搜索</button>
 										</div>
 									</form>
 								</div>
 								<div class="hotwords">
 									<ul>
-										<li class="f-item">品优购首发</li>
+										<li class="f-item">PYG首发</li>
 										<li class="f-item">亿元优惠</li>
 										<li class="f-item">9.9元团购</li>
 										<li class="f-item">每满99减30</li>
@@ -150,18 +150,18 @@
 					</li>									
 				</ul>
 				<ul class="tags-choose">
-					<li class="tag">商品分类：手机<i class="sui-icon icon-tb-close"></i></li>
-					<li class="tag">品牌：华为<i class="sui-icon icon-tb-close"></i></li>
-					<li class="tag">内存：16G<i class="sui-icon icon-tb-close"></i></li>
-					<li class="tag">价格：500-1000<i class="sui-icon icon-tb-close"></i></li>
-					搜索结果：0条
+					<li class="tag" ng-if="searchMap['category'] != ''" ng-click="removeSearchItem('category')" >商品分类：{{searchMap["category"]}}<i class="sui-icon icon-tb-close"></i></li>
+					<li class="tag" ng-if="searchMap['brand'] != ''" ng-click="removeSearchItem('brand')">品牌：{{searchMap['brand']}}<i class="sui-icon icon-tb-close"></i></li>
+					<li class="tag" ng-repeat="(key,value) in searchMap.spec" ng-click="removeSearchItem(key)">{{key}}：{{value}}<i class="sui-icon icon-tb-close"></i></li>
+					<li class="tag" ng-if="searchMap['price'] != ''" ng-click="removeSearchItem('price')">价格：{{searchMap['price']}}<i class="sui-icon icon-tb-close"></i></li>
+					搜索结果：{{resultMap.total}}条
 				</ul>
 				
 				<div class="clearfix"></div>
 			</div>
 			<!--selector-->
 			<div class="clearfix selector">
-				<div class="type-wrap">
+				<div class="type-wrap" ng-if="searchMap.category == ''">
 					<div class="fl key">商品分类</div>
 					<div class="fl value">
                         <span>
@@ -173,7 +173,7 @@
                     </div>
 					<div class="fl ext"></div>
 				</div>
-				<div class="type-wrap logo">
+				<div class="type-wrap logo" ng-if="searchMap.brand == ''">
 					<div class="fl key brand">品牌</div>
 					<div class="value logos">
 						<ul class="logo-list">
@@ -190,7 +190,7 @@
 						</ul>
 					</div>
 				</div>
-                <div class="type-wrap">
+                <div class="type-wrap" ng-if="searchMap.spec['网络'] == null">
                     <div class="fl key">网络</div>
                     <div class="fl value">
                         <ul class="type-list">
@@ -216,7 +216,7 @@
                     </div>
                     <div class="fl ext"></div>
                 </div>
-                <div class="type-wrap">
+                <div class="type-wrap" ng-if="searchMap.spec['机身内存'] == null">
                     <div class="fl key">机身内存</div>
                     <div class="fl value">
                         <ul class="type-list">
@@ -237,7 +237,7 @@
                     <div class="fl ext"></div>
                 </div>
 				
-				<div class="type-wrap">
+				<div class="type-wrap" ng-if="searchMap.price == ''">
 					<div class="fl key">价格</div>
 					<div class="fl value">
 						<ul class="type-list">
@@ -264,30 +264,7 @@
 					<div class="fl ext">
 					</div>
 				</div>
-				<div class="type-wrap">
-					<div class="fl key">更多筛选项</div>
-					<div class="fl value">
-						<ul class="type-list">
-							<li>
-								<a>特点</a>
-							</li>
-							<li>
-								<a>系统</a>
-							</li>
-							<li>
-								<a>手机内存 </a>
-							</li>
-							<li>
-								<a>单卡双卡</a>
-							</li>
-							<li>
-								<a>其他</a>
-							</li>
-						</ul>
-					</div>
-					<div class="fl ext">
-					</div>
-				</div>
+
 			</div>
 			<!--details-->
 			<div class="details">
@@ -295,47 +272,49 @@
 					<div class="navbar-inner filter">
 						<ul class="sui-nav">
 							<li class="active">
-								<a href="#">综合</a>
+								<a href="#" ng-click="addSortField('','')">综合</a>
 							</li>
 							<li>
 								<a href="#">销量</a>
 							</li>
 							<li>
-								<a href="#">新品</a>
+								<a href="#" ng-click="addSortField('updatetime','DESC')">新品</a>
 							</li>
 							<li>
 								<a href="#">评价</a>
 							</li>
 							<li>
-								<a href="#">价格↑</a>
+								<a href="#" ng-click="addSortField('price','ASC')">价格↑</a>
 							</li>
 							<li>
-								<a href="#">价格↓</a>
+								<a href="#" ng-click="addSortField('price','DESC')">价格↓</a>
 							</li>
 						</ul>
 					</div>
 				</div>
 				<div class="goods-list">
 					<ul class="yui3-g">
-						<li class="yui3-u-1-5">
+						<li class="yui3-u-1-5" ng-repeat="item in resultMap.rows">
 							<div class="list-wrap">
 								<div class="p-img">
-									<a href="item.html" target="_blank"><img src="img/_/mobile01.png" /></a>
+									<a href="http://item.pinyougou.com/{{item.goodsId}}.html" target="_blank"><img src="{{item.image}}" /></a>
 								</div>
 								<div class="price">
 									<strong>
 											<em>¥</em>
-											<i>6088.00</i>
+											<i>{{item.price.toFixed(2)}}</i>
 										</strong>
 								</div>
-								<div class="attr" style="height: auto">
-									<em>Apple苹果iPhone 6s (A1699)</em>
+								<div class="attr" style="height: auto" ng-bind-html="item.title | trustHtml">
 								</div>
 								<div class="cu">
 									<em><span>促</span>满一件可参加超值换购</em>
 								</div>
 								<div class="commit">
 									<i class="command">已有2000人评价</i>
+								</div>
+								<div class="commit">
+									<a href="http://shop.pinyougou.com/?{{item.seller}}.html" target="_blank" >{{item.seller}}</a>
 								</div>
 								<div class="operate">
 									<a href="success-cart.html" target="_blank" class="sui-btn btn-bordered btn-danger">加入购物车</a>
@@ -344,281 +323,30 @@
 								</div>
 							</div>
 						</li>
-						<li class="yui3-u-1-5">
-							<div class="list-wrap">
-								<div class="p-img">
-									<img src="img/_/mobile02.png" />
-								</div>
-								<div class="price">
-									<strong>
-											<em>¥</em>
-											<i>6088.00</i>
-										</strong>
-								</div>
-								<div class="attr" style="height: auto">
-									<em>Apple苹果iPhone 6s (A1699)</em>
-								</div>
-								<div class="cu">
-									<em><span>促</span>满一件可参加超值换购</em>
-								</div>
-								<div class="commit">
-									<i class="command">已有2000人评价</i>
-								</div>
-								<div class="operate">
-									<a href="javascript:void(0);" class="sui-btn btn-bordered btn-danger">加入购物车</a>
-									<a href="javascript:void(0);" class="sui-btn btn-bordered">对比</a>
-									<a href="javascript:void(0);" class="sui-btn btn-bordered">关注</a>
-								</div>
-							</div>
-						</li>
-						<li class="yui3-u-1-5">
-							<div class="list-wrap">
-								<div class="p-img">
-									<img src="img/_/mobile03.png" />
-								</div>
-								<div class="price">
-									<strong>
-											<em>¥</em>
-											<i>6088.00</i>
-										</strong>
-								</div>
-								<div class="attr" style="height: auto">
-									<em>Apple苹果iPhone 6s (A1699)</em>
-								</div>
-								<div class="cu">
-									<em><span>促</span>满一件可参加超值换购</em>
-								</div>
-								<div class="commit">
-									<i class="command">已有2000人评价</i>
-								</div>
-								<div class="operate">
-									<a href="javascript:void(0);" class="sui-btn btn-bordered btn-danger">加入购物车</a>
-									<a href="javascript:void(0);" class="sui-btn btn-bordered">对比</a>
-									<a href="javascript:void(0);" class="sui-btn btn-bordered">关注</a>
-								</div>
-							</div>
-						</li>
-						<li class="yui3-u-1-5">
-							<div class="list-wrap">
-								<div class="p-img">
-									<img src="img/_/mobile04.png" />
-								</div>
-								<div class="price">
-									<strong>
-											<em>¥</em>
-											<i>6088.00</i>
-										</strong>
-								</div>
-								<div class="attr" style="height: auto">
-									<em>Apple苹果iPhone 6s (A1699)</em>
-								</div>
-								<div class="cu">
-									<em><span>促</span>满一件可参加超值换购</em>
-								</div>
-								<div class="commit">
-									<i class="command">已有2000人评价</i>
-								</div>
-								<div class="operate">
-									<a href="javascript:void(0);" class="sui-btn btn-bordered btn-danger">加入购物车</a>
-									<a href="javascript:void(0);" class="sui-btn btn-bordered">对比</a>
-									<a href="javascript:void(0);" class="sui-btn btn-bordered">关注</a>
-								</div>
-							</div>
-						</li>
-						<li class="yui3-u-1-5">
-							<div class="list-wrap">
-								<div class="p-img">
-									<img src="img/_/mobile05.png" />
-								</div>
-								<div class="price">
-									<strong>
-											<em>¥</em>
-											<i>6088.00</i>
-										</strong>
-								</div>
-								<div class="attr" style="height: auto">
-									<em>Apple苹果iPhone 6s (A1699)</em>
-								</div>
-								<div class="cu">
-									<em><span>促</span>满一件可参加超值换购</em>
-								</div>
-								<div class="commit">
-									<i class="command">已有2000人评价</i>
-								</div>
-								<div class="operate">
-									<a href="javascript:void(0);" class="sui-btn btn-bordered btn-danger">加入购物车</a>
-									<a href="javascript:void(0);" class="sui-btn btn-bordered">对比</a>
-									<a href="javascript:void(0);" class="sui-btn btn-bordered">关注</a>
-								</div>
-							</div>
-						</li>
-						<li class="yui3-u-1-5">
-							<div class="list-wrap">
-								<div class="p-img">
-									<img src="img/_/mobile06.png" />
-								</div>
-								<div class="price">
-									<strong>
-											<em>¥</em>
-											<i>6088.00</i>
-										</strong>
-								</div>
-								<div class="attr" style="height: auto">
-									<em>Apple苹果iPhone 6s (A1699)</em>
-								</div>
-								<div class="cu">
-									<em><span>促</span>满一件可参加超值换购</em>
-								</div>
-								<div class="commit">
-									<i class="command">已有2000人评价</i>
-								</div>
-								<div class="operate">
-									<a href="javascript:void(0);" class="sui-btn btn-bordered btn-danger">加入购物车</a>
-									<a href="javascript:void(0);" class="sui-btn btn-bordered">对比</a>
-									<a href="javascript:void(0);" class="sui-btn btn-bordered">关注</a>
-								</div>
-							</div>
-						</li>
-						<li class="yui3-u-1-5">
-							<div class="list-wrap">
-								<div class="p-img">
-									<img src="img/_/mobile01.png" />
-								</div>
-								<div class="price">
-									<strong>
-											<em>¥</em>
-											<i>6088.00</i>
-										</strong>
-								</div>
-								<div class="attr" style="height: auto">
-									<em>Apple苹果iPhone 6s (A1699)</em>
-								</div>
-								<div class="cu">
-									<em><span>促</span>满一件可参加超值换购</em>
-								</div>
-								<div class="commit">
-									<i class="command">已有2000人评价</i>
-								</div>
-								<div class="operate">
-									<a href="javascript:void(0);" class="sui-btn btn-bordered btn-danger">加入购物车</a>
-									<a href="javascript:void(0);" class="sui-btn btn-bordered">对比</a>
-									<a href="javascript:void(0);" class="sui-btn btn-bordered">关注</a>
-								</div>
-							</div>
-						</li>
-						<li class="yui3-u-1-5">
-							<div class="list-wrap">
-								<div class="p-img">
-									<img src="img/_/mobile02.png" />
-								</div>
-								<div class="price">
-									<strong>
-											<em>¥</em>
-											<i>6088.00</i>
-										</strong>
-								</div>
-								<div class="attr" style="height: auto">
-									<em>Apple苹果iPhone 6s (A1699)</em>
-								</div>
-								<div class="cu">
-									<em><span>促</span>满一件可参加超值换购</em>
-								</div>
-								<div class="commit">
-									<i class="command">已有2000人评价</i>
-								</div>
-								<div class="operate">
-									<a href="javascript:void(0);" class="sui-btn btn-bordered btn-danger">加入购物车</a>
-									<a href="javascript:void(0);" class="sui-btn btn-bordered">对比</a>
-									<a href="javascript:void(0);" class="sui-btn btn-bordered">关注</a>
-								</div>
-							</div>
-						</li>
-						<li class="yui3-u-1-5">
-							<div class="list-wrap">
-								<div class="p-img">
-									<img src="img/_/mobile03.png" />
-								</div>
-								<div class="price">
-									<strong>
-											<em>¥</em>
-											<i>6088.00</i>
-										</strong>
-								</div>
-								<div class="attr">
-									<em>Apple苹果iPhone 6s (A1699)</em>
-								</div>
-								<div class="cu">
-									<em><span>促</span>满一件可参加超值换购</em>
-								</div>
-								<div class="commit">
-									<i class="command">已有2000人评价</i>
-								</div>
-								<div class="operate">
-									<a href="javascript:void(0);" class="sui-btn btn-bordered btn-danger">加入购物车</a>
-									<a href="javascript:void(0);" class="sui-btn btn-bordered">对比</a>
-									<a href="javascript:void(0);" class="sui-btn btn-bordered">关注</a>
-								</div>
-							</div>
-						</li>
-						<li class="yui3-u-1-5">
-							<div class="list-wrap">
-								<div class="p-img">
-									<img src="img/_/mobile04.png" />
-								</div>
-								<div class="price">
-									<strong>
-											<em>¥</em>
-											<i>6088.00</i>
-										</strong>
-								</div>
-								<div class="attr">
-									<em>Apple苹果iPhone 6s (A1699)</em>
-								</div>
-								<div class="cu">
-									<em><span>促</span>满一件可参加超值换购</em>
-								</div>
-								<div class="commit">
-									<i class="command">已有2000人评价</i>
-								</div>
-								<div class="operate">
-									<a href="javascript:void(0);" class="sui-btn btn-bordered btn-danger">加入购物车</a>
-									<a href="javascript:void(0);" class="sui-btn btn-bordered">对比</a>
-									<a href="javascript:void(0);" class="sui-btn btn-bordered">关注</a>
-								</div>
-							</div>
-						</li>
+
 					</ul>
 				</div>
 				<div class="fr page">
 					<div class="sui-pagination pagination-large">
 						<ul>
-							<li class="prev disabled">
-								<a href="#">«上一页</a>
+							<li class="prev {{searchMap.pageNo==1?'disabled':''}}">
+								<a href="#" ng-click="queryByPageNo(searchMap.pageNo-1)">«上一页</a>
 							</li>
-							<li class="active">
-								<a href="#">1</a>
+                            <li ng-if="frontDot" class="dotted"><span>...</span></li>
+
+							<li ng-repeat="pn in pageNoList" class="{{isCurrentPage(pn)?'active':''}}">
+								<a href="#" ng-click="queryByPageNo(pn)">{{pn}}</a>
 							</li>
-							<li>
-								<a href="#">2</a>
-							</li>
-							<li>
-								<a href="#">3</a>
-							</li>
-							<li>
-								<a href="#">4</a>
-							</li>
-							<li>
-								<a href="#">5</a>
-							</li>
-							<li class="dotted"><span>...</span></li>
-							<li class="next">
-								<a href="#">下一页»</a>
+
+							<li ng-if="backDot" class="dotted"><span>...</span></li>
+							<li class="next {{searchMap.pageNo==resultMap.totalPages?'disabled':''}}">
+								<a href="#" ng-click="queryByPageNo(searchMap.pageNo+1)">下一页»</a>
 							</li>
 						</ul>
-						<div><span>共10页&nbsp;</span><span>
+						<div><span>共{{resultMap.totalPages}}页&nbsp;</span><span>
       到第
-      <input type="text" class="page-num">
-      页 <button class="page-confirm" onclick="alert(1)">确定</button></span></div>
+      <input type="text" ng-model="searchMap.pageNo" class="page-num">
+      页 <button class="page-confirm" ng-click="search()">确定</button></span></div>
 					</div>
 				</div>
 			</div>
@@ -811,8 +539,8 @@
 								<li>夺宝岛</li>
 								<li>DIY装机</li>
 								<li>延保服务</li>
-								<li>品优购E卡</li>
-								<li>品优购通信</li>
+								<li>PYG E卡</li>
+								<li>PYG通信</li>
 							</ul>
 						</div>
 						<div class="yui3-u-1-6">
