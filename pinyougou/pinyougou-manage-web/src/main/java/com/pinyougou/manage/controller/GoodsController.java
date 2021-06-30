@@ -2,10 +2,13 @@ package com.pinyougou.manage.controller;
 
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.pinyougou.pojo.TbGoods;
+import com.pinyougou.pojo.TbItem;
+import com.pinyougou.search.service.ItemSearchService;
 import com.pinyougou.sellergoods.service.GoodsService;
 import com.pinyougou.vo.Goods;
 import com.pinyougou.vo.PageResult;
 import com.pinyougou.vo.Result;
+import org.springframework.data.solr.core.SolrTemplate;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,6 +20,9 @@ public class GoodsController {
 
     @Reference
     private GoodsService goodsService;
+
+    @Reference
+    private ItemSearchService itemSearchService;
 
     @RequestMapping("/findAll")
     public List<TbGoods> findAll() {
@@ -53,6 +59,11 @@ public class GoodsController {
     public Result update(Long[] ids,String status) {
         try {
             goodsService.updateStatus(ids,status);
+            if ("2".equals(status)){
+                //如果审核通过需要导入到索引库
+                List<TbItem> itemList = goodsService.findItemListByGoodsAndStatus(ids,status);
+                itemSearchService.importItemListToSolr(itemList);
+            }
             return Result.ok("提交审核成功");
         } catch (Exception e) {
             e.printStackTrace();

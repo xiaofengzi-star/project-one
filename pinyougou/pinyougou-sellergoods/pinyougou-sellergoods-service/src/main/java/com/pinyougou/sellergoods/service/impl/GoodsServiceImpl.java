@@ -11,11 +11,13 @@ import com.pinyougou.sellergoods.service.GoodsService;
 import com.pinyougou.service.impl.BaseServiceImpl;
 import com.pinyougou.vo.Goods;
 import com.pinyougou.vo.PageResult;
+import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import tk.mybatis.mapper.entity.Example;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -216,7 +218,7 @@ public class GoodsServiceImpl extends BaseServiceImpl<TbGoods> implements GoodsS
     }
 
     /**
-     * 根据选中的id跟状态更新goods
+     * 根据选中的id跟状态更新goods  以及更新item
      * @param ids 选中的商品id
      * @param status 更新后的状态
      */
@@ -227,6 +229,16 @@ public class GoodsServiceImpl extends BaseServiceImpl<TbGoods> implements GoodsS
             tbGoods.setId(id);
             tbGoods.setAuditStatus(status);
             goodsMapper.updateByPrimaryKeySelective(tbGoods);
+            if ("2".equals(status)){
+                Example example = new Example(TbItem.class);
+                Example.Criteria criteria = example.createCriteria();
+                criteria.andEqualTo("goodsId",id);
+
+                TbItem tbItem = new TbItem();
+                tbItem.setStatus("1");
+
+                itemMapper.updateByExampleSelective(tbItem,example);
+            }
         }
     }
 
@@ -243,4 +255,16 @@ public class GoodsServiceImpl extends BaseServiceImpl<TbGoods> implements GoodsS
             goodsMapper.updateByPrimaryKeySelective(param);
         }
     }
+
+    @Override
+    public List<TbItem> findItemListByGoodsAndStatus(Long[] ids, String status) {
+
+        Example example = new Example(TbItem.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andIn("goodsId", Arrays.asList(ids)).andEqualTo("status",status);
+        List<TbItem> itemList = itemMapper.selectByExample(example);
+
+        return itemList;
+    }
+
 }
