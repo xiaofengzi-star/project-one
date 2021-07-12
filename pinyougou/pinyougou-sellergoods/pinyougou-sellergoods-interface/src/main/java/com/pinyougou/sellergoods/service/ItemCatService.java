@@ -7,6 +7,5 @@ import java.util.List;
 
 public interface ItemCatService extends BaseService<TbItemCat> {
 
-
     List<TbItemCat> findByParentId(Long parentId);
 }

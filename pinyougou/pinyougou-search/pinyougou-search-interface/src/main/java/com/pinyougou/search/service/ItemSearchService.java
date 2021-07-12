@@ -10,4 +10,6 @@ public interface ItemSearchService{
     Map<String, Object> search(Map<String, Object> searchMap);
 
     void importItemListToSolr(List<TbItem> itemList);
+
+    void deleteItemListByIds(Long[] ids);
 }

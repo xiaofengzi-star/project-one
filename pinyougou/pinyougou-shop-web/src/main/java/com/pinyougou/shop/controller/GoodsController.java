@@ -3,6 +3,7 @@ package com.pinyougou.shop.controller;
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.pinyougou.pojo.TbGoods;
 import com.pinyougou.sellergoods.service.GoodsService;
+import com.pinyougou.search.service.ItemSearchService;
 import com.pinyougou.vo.Goods;
 import com.pinyougou.vo.PageResult;
 import com.pinyougou.vo.Result;
@@ -17,6 +18,10 @@ public class GoodsController {
 
     @Reference
     private GoodsService goodsService;
+
+    @Reference
+    private ItemSearchService itemSearchService;
+
 
     @RequestMapping("/findAll")
     public List<TbGoods> findAll() {
@@ -64,6 +69,7 @@ public class GoodsController {
     public Result delete(Long[] ids) {
         try {
             goodsService.deleteGoodsByIds(ids);
+            itemSearchService.deleteItemListByIds(ids);
             return Result.ok("删除成功");
         } catch (Exception e) {
             e.printStackTrace();

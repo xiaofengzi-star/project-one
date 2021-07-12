@@ -2,9 +2,9 @@ package com.pinyougou.search.service.impl;
 
 import com.alibaba.dubbo.config.annotation.Service;
 import com.alibaba.fastjson.JSON;
+import com.pinyougou.mapper.ItemMapper;
 import com.pinyougou.pojo.TbItem;
 import com.pinyougou.search.service.ItemSearchService;
-import org.noggit.JSONUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.solr.core.SolrTemplate;
@@ -15,19 +15,25 @@ import org.springframework.data.solr.core.query.SimpleHighlightQuery;
 import org.springframework.data.solr.core.query.SimpleQuery;
 import org.springframework.data.solr.core.query.result.HighlightEntry;
 import org.springframework.data.solr.core.query.result.HighlightPage;
-import org.springframework.data.solr.core.query.result.ScoredPage;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
+import tk.mybatis.mapper.entity.Example;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+@Transactional
 @Service(interfaceClass = ItemSearchService.class)
 public class  ItemSearchServiceImpl implements ItemSearchService {
 
     @Autowired
     private SolrTemplate solrTemplate;
+
+    @Autowired
+    private ItemMapper itemMapper;
 
     @Override
     public Map<String, Object> search(Map<String, Object> searchMap) {
@@ -147,7 +153,23 @@ public class  ItemSearchServiceImpl implements ItemSearchService {
             Map map = JSON.parseObject(tbItem.getSpec().toString(), Map.class);
             tbItem.setSpecMap(map);
         }
-        solrTemplate.saveBean(itemList);
+        solrTemplate.saveBeans(itemList);
+        solrTemplate.commit();
+    }
+
+
+    /**
+     *
+     * @param ids 需要删除的商品id
+     */
+    @Override
+    public void deleteItemListByIds(Long[] ids) {
+
+        List<Long> itemList = Arrays.asList(ids);
+
+        Criteria criteria = new Criteria("item_goodsid").in(itemList);
+        SimpleQuery simpleQuery = new SimpleQuery(criteria);
+        solrTemplate.delete(simpleQuery);
         solrTemplate.commit();
     }
 }

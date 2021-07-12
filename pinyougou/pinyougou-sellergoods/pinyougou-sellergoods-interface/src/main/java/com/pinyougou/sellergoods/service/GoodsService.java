@@ -20,4 +20,6 @@ public interface GoodsService extends BaseService<TbGoods> {
     void deleteGoodsByIds(Long[] ids);
 
     List<TbItem> findItemListByGoodsAndStatus(Long[] ids, String status);
+
+    Goods findOneByGoodIdAndStatus(Long goodsId, String s);
 }

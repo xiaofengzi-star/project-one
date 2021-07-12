@@ -11,7 +11,6 @@ import com.pinyougou.sellergoods.service.GoodsService;
 import com.pinyougou.service.impl.BaseServiceImpl;
 import com.pinyougou.vo.Goods;
 import com.pinyougou.vo.PageResult;
-import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -265,6 +264,29 @@ public class GoodsServiceImpl extends BaseServiceImpl<TbGoods> implements GoodsS
         List<TbItem> itemList = itemMapper.selectByExample(example);
 
         return itemList;
+    }
+
+    @Override
+    public Goods findOneByGoodIdAndStatus(Long id, String s) {
+        Goods goods = new Goods();
+
+        //1、根据商品id查询商品基本信息
+        goods.setGoods(findOne(id));
+
+        //2、根据商品id查询商品描述信息
+        goods.setGoodsDesc(goodsDescMapper.selectByPrimaryKey(id));
+
+        //3、根据商品id查询商品sku列表
+        Example example = new Example(TbItem.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("status",s);
+        criteria.andEqualTo("goodsId",id);
+        example.orderBy("isDefault").desc();
+
+        List<TbItem> itemList = itemMapper.selectByExample(example);
+
+        goods.setItemList(itemList);
+        return goods;
     }
 
 }

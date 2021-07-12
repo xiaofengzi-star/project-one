@@ -24,11 +24,19 @@
     <servlet>
         <servlet-name>springmvc</servlet-name>
         <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
-        <!--  指定加载的配置文件 ，通过参数 contextConfigLocation 加载 -->
+        <!--  指定加载的配置文件 ，通过参数 contextcontextConfigLocationConfigLocation 加载 -->
         <init-param>
             <param-name>contextConfigLocation</param-name>
             <param-value>classpath:spring/springmvc.xml</param-value>
         </init-param>
+        <!--
+        1)标记容器是否在启动的时候就加载这个servlet
+        2)它的值必须是一个整数，表示servlet应该被载入的顺序
+        3)当值为0或者大于0时，表示容器在应用启动时就加载并初始化这个servlet；
+        4)当值小于0或者没有指定时，则表示容器在该servlet被选择时才会去加载。
+        5)正数的值越小，该servlet的优先级越高，应用启动时就越先加载。
+        6)当值相同时，容器就会自己选择顺序来加载。
+        -->
         <load-on-startup>1</load-on-startup>
     </servlet>
     <servlet-mapping>
